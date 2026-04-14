@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Productivity Dungeon</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <style>
+    body { background: #fff; }
+  </style>
+</head>
+
+<body class="text-black">
+<div id="app" class="max-w-md mx-auto min-h-screen p-4">
+
+  <!-- HEADER -->
+  <div class="mb-4">
+    <h1 class="text-xl font-bold">Productivity Dungeon</h1>
+    <div class="h-1 w-12 bg-yellow-400 mt-1"></div>
+    <div class="text-xs text-gray-500 mt-1">Clear rooms by completing tasks</div>
+  </div>
+
+  <!-- ADD TASK -->
+  <div class="p-4 border rounded-2xl mb-4">
+
+    <input v-model="newTask"
+      class="w-full p-3 border rounded-xl mb-2"
+      placeholder="Enter room task..." />
+
+    <button @click="addTask"
+      class="w-full bg-yellow-400 text-black py-2 rounded-xl font-semibold">
+      Add Room
+    </button>
+
+  </div>
+
+  <!-- STATS -->
+  <div class="grid grid-cols-2 gap-3 mb-4">
+
+    <div class="p-3 border rounded-xl">
+      <div class="text-xs text-gray-500">Cleared</div>
+      <div class="text-2xl font-bold">{{ clearedCount }}</div>
+    </div>
+
+    <div class="p-3 border rounded-xl">
+      <div class="text-xs text-gray-500">Total</div>
+      <div class="text-2xl font-bold">{{ tasks.length }}</div>
+    </div>
+
+  </div>
+
+  <!-- ROOMS -->
+  <div class="space-y-3">
+
+    <div v-for="(t, i) in tasks" :key="i"
+      class="p-4 border rounded-2xl flex justify-between items-center"
+      :class="t.done ? 'bg-yellow-50 opacity-70' : ''">
+
+      <div>
+        <div class="font-semibold flex items-center gap-2">
+          <span v-if="t.done">🏆</span>
+          <span v-else>🗡️</span>
+          {{ t.name }}
+        </div>
+
+        <div class="text-xs text-gray-500">
+          {{ t.done ? 'Cleared Room' : 'Uncleared Room' }}
+        </div>
+      </div>
+
+      <button v-if="!t.done"
+        @click="complete(i)"
+        class="text-xs px-3 py-1 bg-black text-white rounded-full">
+        Clear
+      </button>
+
+      <button v-else
+        @click="undo(i)"
+        class="text-xs px-3 py-1 border rounded-full">
+        Undo
+      </button>
+
+    </div>
+
+  </div>
+
+  <button @click="reset"
+    class="mt-6 w-full text-xs border border-red-200 text-red-500 py-2 rounded-xl">
+    Reset Dungeon
+  </button>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      newTask: "",
+      tasks: JSON.parse(localStorage.getItem("dungeon_tasks") || "[]")
+    };
+  },
+
+  computed: {
+    clearedCount() {
+      return this.tasks.filter(t => t.done).length;
+    }
+  },
+
+  methods: {
+    addTask() {
+      if (!this.newTask.trim()) return;
+
+      this.tasks.push({
+        name: this.newTask,
+        done: false,
+        created: new Date().toISOString()
+      });
+
+      this.newTask = "";
+      this.save();
+    },
+
+    complete(i) {
+      this.tasks[i].done = true;
+      this.save();
+    },
+
+    undo(i) {
+      this.tasks[i].done = false;
+      this.save();
+    },
+
+    reset() {
+      this.tasks = [];
+      this.save();
+    },
+
+    save() {
+      localStorage.setItem("dungeon_tasks", JSON.stringify(this.tasks));
+    }
+  }
+}).mount("#app");
+</script>
+
+</body>
+</html>

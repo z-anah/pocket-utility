@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Upwork Job Search Redirect</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Vue 3 CDN -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+  <div id="app" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
+    <h1 class="text-xl font-semibold mb-4 text-gray-800">
+      Upwork Job Search
+    </h1>
+
+    <!-- Example keyword groups -->
+    <div class="mb-4">
+      <div class="mb-2 font-semibold text-gray-700">Frontend</div>
+      <div class="flex flex-wrap gap-2 mb-3">
+        <button v-for="kw in frontendKeywords" :key="kw" @click="selectKeyword(kw)"
+          class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded text-sm">
+          {{ kw }}
+        </button>
+      </div>
+      <div class="mb-2 font-semibold text-gray-700">Backend</div>
+      <div class="flex flex-wrap gap-2">
+        <button v-for="kw in backendKeywords" :key="kw" @click="selectKeyword(kw)"
+          class="bg-purple-100 hover:bg-purple-200 text-purple-800 px-3 py-1 rounded text-sm">
+          {{ kw }}
+        </button>
+      </div>
+      <div class="mb-2 mt-4 font-semibold text-gray-700">Mobile</div>
+      <div class="flex flex-wrap gap-2">
+        <button v-for="kw in mobileKeywords" :key="kw" @click="selectKeyword(kw)"
+          class="bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded text-sm">
+          {{ kw }}
+        </button>
+      </div>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+      Search keyword (q)
+    </label>
+
+    <input v-model="query" type="text" placeholder="e.g. flutter, vue, react"
+      class="w-full border rounded px-3 py-2 mb-4 focus:outline-none focus:ring focus:ring-green-300" />
+
+    <button @click="openSearch"
+      class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 rounded transition">
+      Open Upwork Search
+    </button>
+
+    <p class="text-xs text-gray-500 mt-3 break-all">
+      Final URL:<br />
+      {{ finalUrl }}
+    </p>
+
+    More link list:
+    <ul class="list-disc list-inside text-sm text-gray-600 mb-3">
+      <li>
+        <a
+          href="https://www.upwork.com/nx/search/jobs/?location=Canada&per_page=10&proposals=0-4&sort=recency&t=0">canada</a>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          query: 'flutter',
+          baseUrl: 'https://www.upwork.com/nx/search/jobs/?client_hires=0,1-9,10-&location=Americas,Europe,Oceania&payment_verified=1&per_page=10&proposals=0-4,5-9,10-14&sort=recency&t=0,1',
+
+          frontendKeywords: [
+            'vue', 'react', 'angular', 'next', 'nuxt'
+          ],
+          backendKeywords: ['node', 'spring', 'express'],
+          mobileKeywords: ['flutter']
+        };
+      },
+      computed: {
+        finalUrl() {
+          return `${this.baseUrl}&q=${encodeURIComponent(this.query)}`;
+        }
+      },
+      methods: {
+        openSearch() {
+          window.open(this.finalUrl, '_blank');
+        },
+        selectKeyword(kw) {
+          this.query = kw;
+          this.openSearch();
+        }
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+
+</html>

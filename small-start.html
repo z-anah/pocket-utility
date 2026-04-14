@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Small Start</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js"></script>
+
+  <style>
+    body { background: #fff; }
+  </style>
+</head>
+
+<body class="text-black">
+<div id="app" class="max-w-md mx-auto min-h-screen p-4">
+
+  <!-- HEADER -->
+  <div class="mb-4">
+    <h1 class="text-xl font-bold">Small Start</h1>
+    <div class="h-1 w-12 bg-yellow-400 mt-1"></div>
+    <div class="text-xs text-gray-500 mt-1">One tiny step is enough</div>
+  </div>
+
+  <!-- CATEGORY LIST -->
+  <div v-if="page==='list'" class="space-y-3">
+
+    <div v-for="(c,i) in items" :key="i"
+      @click="select(c)"
+      class="p-4 border rounded-2xl active:scale-95 transition transform hover:scale-[1.01] cursor-pointer">
+
+      <div class="flex items-center gap-2">
+        <div class="text-2xl animate-bounce">{{ c.emoji }}</div>
+        <div>
+          <div class="font-semibold">{{ c.title }}</div>
+          <div class="text-xs text-gray-500">{{ c.subtitle }}</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- DETAIL -->
+  <div v-if="page==='detail'" class="space-y-4">
+
+    <button @click="page='list'"
+      class="text-xs px-3 py-1 border rounded-full">
+      Back
+    </button>
+
+    <div class="p-5 border rounded-2xl bg-yellow-50 animate-pulse">
+
+      <div class="text-3xl mb-2">{{ selected.emoji }}</div>
+
+      <div class="text-sm text-gray-500 mb-1">Mindset Shift</div>
+      <div class="font-semibold mb-3">{{ selected.mindset }}</div>
+
+      <div class="text-sm text-gray-500 mb-1">First Easy Step</div>
+      <div class="font-bold">{{ selected.step }}</div>
+
+    </div>
+
+    <button @click="doneTask"
+      class="w-full bg-black text-white py-3 rounded-xl active:scale-95 transition">
+      I Did It ✓
+    </button>
+
+    <div v-if="done"
+      class="text-center text-sm text-green-600 animate-bounce">
+      Nice. One small win added ✨
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      page: "list",
+      selected: null,
+      done: false,
+
+      items: [
+        {
+          emoji: "🚿",
+          title: "Take a Bath",
+          subtitle: "feels hard to start",
+          mindset: "You don’t need motivation. You only need the first small action.",
+          step: "Go to bathroom and turn on water"
+        },
+        {
+          emoji: "📚",
+          title: "Start Studying",
+          subtitle: "procrastination loop",
+          mindset: "Just opening the material is already progress.",
+          step: "Open your book or file only"
+        },
+        {
+          emoji: "🧹",
+          title: "Clean Room",
+          subtitle: "overwhelmed mess",
+          mindset: "One small corner is enough to start momentum.",
+          step: "Pick up 1 item from the floor"
+        },
+        {
+          emoji: "💻",
+          title: "Start Work",
+          subtitle: "stuck before starting",
+          mindset: "You don’t need clarity first, action creates clarity.",
+          step: "Open your project folder"
+        },
+        {
+          emoji: "🍽️",
+          title: "Cook Food",
+          subtitle: "no energy",
+          mindset: "Start without thinking. The body follows action.",
+          step: "Stand up and go to kitchen"
+        }
+      ]
+    };
+  },
+
+  methods: {
+    select(c) {
+      this.selected = c;
+      this.page = "detail";
+      this.done = false;
+    },
+
+    doneTask() {
+      this.done = true;
+
+      let log = JSON.parse(localStorage.getItem("small_wins") || "[]");
+      log.push({
+        title: this.selected.title,
+        time: new Date().toISOString()
+      });
+
+      localStorage.setItem("small_wins", JSON.stringify(log));
+    }
+  }
+}).mount("#app");
+</script>
+
+</body>
+</html>

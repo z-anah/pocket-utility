@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pocket Utility</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <style>
+        body {
+            background: #ffffff;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-black">
+    <div id="app" class="max-w-md mx-auto p-4">
+
+        <!-- Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-black">Pocket Utility</h1>
+            <p class="text-sm text-gray-600">Mini tools for daily use</p>
+            <div class="h-1 w-16 bg-yellow-400 mt-2"></div>
+        </div>
+
+        <!-- Search -->
+        <input v-model="search" type="text" placeholder="Search tools..."
+            class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-400" />
+
+        <!-- List -->
+        <div class="mt-4 space-y-3">
+            <a v-for="item in filteredItems" :key="item.name" :href="item.link"
+                class="block p-4 rounded-xl border border-gray-200 hover:border-yellow-400 active:scale-[0.99] transition">
+                <div class="flex justify-between items-center">
+                    <h2 class="font-semibold">{{ item.name }}</h2>
+                    <span class="text-xs bg-yellow-400 text-black px-2 py-1 rounded-full">
+                        open
+                    </span>
+                </div>
+                <p class="text-sm text-gray-600 mt-1">
+                    {{ item.desc }}
+                </p>
+            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-10 text-center text-xs text-gray-400">
+            Built for daily micro productivity
+        </div>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    search: "",
+                    items: [
+                        {
+                            name: "Juz Amma Tracker",
+                            link: "amma.html",
+                            desc: "Track memorization progress of Juz Amma daily."
+                        },
+                        {
+                            name: "Upwork Job Search",
+                            link: "upwork-search.html",
+                            desc: "Quickly generate Upwork search URLs with common filters."
+                        },
+                        {
+                            name: "Baby Pee/Poo Tracker",
+                            link: "baby-pp-tracker.html",
+                            desc: "Log baby's bathroom habits and track patterns over time."
+                        },
+                        {
+                            name: "Mindset Changer",
+                            link: "mindset-changer.html",
+                            desc: "Get quick mindset shifts with random prompts for daily motivation."
+                        },
+                        {
+                            name: "Time Perception Tracker",
+                            link: "time-perception.html",
+                            desc: "Track estimated vs actual time spent on tasks to improve time perception."
+                        },
+                        {
+                            name: "Focus Log",
+                            link: "focus-log.html",
+                            desc: "Log focus and distraction moments to analyze productivity patterns."
+                        },
+                        {
+                            name: "Decision Helper Wheel",
+                            link: "decision.html",
+                            desc: "Create a customizable wheel to help make decisions in a fun way."
+                        },
+                        {
+                            name: "Tooth Timer",
+                            link: "tooth-timer.html",
+                            desc: "A simple 2-minute timer to ensure proper tooth brushing."
+                        },
+                        {
+                            name: "Small Start",
+                            link: "small-start.html",
+                            desc: "Get quick mindset shifts and easy first steps to overcome procrastination."
+                        }
+                    ]
+                };
+            },
+            computed: {
+                filteredItems() {
+                    if (!this.search) return this.items;
+                    return this.items.filter(i =>
+                        i.name.toLowerCase().includes(this.search.toLowerCase())
+                    );
+                }
+            }
+        }).mount("#app");
+    </script>
+
+</body>
+
+</html>

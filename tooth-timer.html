@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brush Buddy</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <style>
+    body { background: #fff; }
+  </style>
+</head>
+
+<body class="text-black">
+<div id="app" class="max-w-md mx-auto min-h-screen p-4 flex flex-col">
+
+  <!-- HEADER -->
+  <div class="mb-3">
+    <h1 class="text-xl font-bold">Brush Buddy</h1>
+    <div class="h-1 w-12 bg-yellow-400 mt-1"></div>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div class="flex-1 flex flex-col justify-center">
+
+    <div class="p-5 border rounded-2xl text-center transition-all duration-300"
+         :class="running ? 'bg-yellow-50 scale-[1.02]' : ''">
+
+      <div class="text-xs text-gray-500 mb-2">Tooth Care Session</div>
+
+      <div class="text-5xl font-bold mb-3">
+        {{ format(timeLeft) }}
+      </div>
+
+      <div class="text-sm text-gray-600 mb-4">
+        {{ phaseText }}
+      </div>
+
+      <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+        <div class="h-2 bg-yellow-400 transition-all duration-300"
+             :style="{ width: progress + '%' }"></div>
+      </div>
+
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="mt-5 grid grid-cols-2 gap-3">
+
+      <button @click="start"
+        class="bg-black text-white py-3 rounded-xl active:scale-95">
+        Start
+      </button>
+
+      <button @click="reset"
+        class="border py-3 rounded-xl active:scale-95">
+        Reset
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="text-center text-xs text-gray-400 mt-3">
+    Make brushing mindful & fun
+  </div>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      total: 120, // 2 minutes
+      timeLeft: 120,
+      running: false,
+      interval: null,
+      phaseIndex: 0,
+
+      phases: [
+        "Front teeth - slow circular brushing",
+        "Left side - focus on gums",
+        "Right side - gentle strokes",
+        "Inner teeth - careful cleaning",
+        "Upper teeth - steady motion",
+        "Lower teeth - stay consistent",
+        "Final rinse preparation"
+      ],
+
+      quotes: [
+        "Cleanliness is part of faith.",
+        "Take care of your body, it is a trust.",
+        "Small actions done consistently bring great reward.",
+        "Stay present. One brush at a time."
+      ]
+    };
+  },
+
+  computed: {
+    progress() {
+      return ((this.total - this.timeLeft) / this.total) * 100;
+    },
+
+    phaseText() {
+      return this.phases[this.phaseIndex] || "Stay focused ✨";
+    }
+  },
+
+  methods: {
+    start() {
+      if (this.running) return;
+
+      this.running = true;
+      this.speak(this.randomQuote());
+
+      this.interval = setInterval(() => {
+        if (this.timeLeft > 0) {
+          this.timeLeft--;
+
+          if (this.timeLeft % 20 === 0) {
+            this.phaseIndex = Math.min(this.phaseIndex + 1, this.phases.length - 1);
+            this.speak(this.phaseText);
+          }
+
+          if (this.timeLeft % 30 === 0) {
+            this.speak("Keep going. You are doing great.");
+          }
+
+        } else {
+          this.finish();
+        }
+      }, 1000);
+    },
+
+    reset() {
+      clearInterval(this.interval);
+      this.timeLeft = this.total;
+      this.running = false;
+      this.phaseIndex = 0;
+    },
+
+    finish() {
+      clearInterval(this.interval);
+      this.running = false;
+      this.speak("Well done. Session complete.");
+
+      let sessions = JSON.parse(localStorage.getItem("brush_sessions") || "0");
+      sessions++;
+      localStorage.setItem("brush_sessions", JSON.stringify(sessions));
+    },
+
+    format(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m}:${sec.toString().padStart(2, "0")}`;
+    },
+
+    speak(text) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 1;
+      u.pitch = 1;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    },
+
+    randomQuote() {
+      return this.quotes[Math.floor(Math.random() * this.quotes.length)];
+    }
+  }
+}).mount("#app");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Baby Tracker</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+  <style>
+    body { background: #fff; }
+  </style>
+</head>
+
+<body class="text-black">
+<div id="app" class="max-w-md mx-auto min-h-screen p-4">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-4">
+    <div>
+      <h1 class="text-xl font-bold">Baby Tracker</h1>
+      <div class="h-1 w-12 bg-yellow-400 mt-1"></div>
+    </div>
+
+    <button @click="page='charts'"
+      class="text-xs px-3 py-1 border border-gray-300 rounded-full active:scale-95">
+      Charts
+    </button>
+  </div>
+
+  <!-- LOG PAGE -->
+  <div v-if="page==='log'">
+
+    <!-- Quick actions -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+
+      <button @click="add('pee')"
+        class="p-6 rounded-2xl border border-gray-200 bg-white active:scale-95">
+        <div class="text-2xl">💧</div>
+        <div class="font-semibold mt-1">Pee</div>
+      </button>
+
+      <button @click="add('poo')"
+        class="p-6 rounded-2xl border border-gray-200 bg-white active:scale-95">
+        <div class="text-2xl">💩</div>
+        <div class="font-semibold mt-1">Poo</div>
+      </button>
+
+    </div>
+
+    <!-- Reminder -->
+    <div class="p-3 border border-yellow-300 bg-yellow-50 rounded-xl mb-4">
+      <div class="text-xs font-semibold">Reminder</div>
+      <div class="text-xs text-gray-600">
+        Keep diaper checks every 2–3 hours
+      </div>
+    </div>
+
+    <!-- Recent logs -->
+    <div class="text-sm font-semibold mb-2">Recent</div>
+
+    <div class="space-y-2">
+      <div v-for="(item, i) in logs.slice().reverse().slice(0,8)"
+           :key="i"
+           class="flex justify-between items-center p-3 border rounded-xl">
+        <div class="flex items-center gap-2">
+          <span v-if="item.type==='pee'">💧</span>
+          <span v-else>💩</span>
+          <span class="text-sm font-medium">{{ item.type }}</span>
+        </div>
+        <div class="text-xs text-gray-500">
+          {{ format(item.time) }}
+        </div>
+      </div>
+    </div>
+
+    <button @click="clearData"
+      class="mt-6 w-full text-xs border border-red-200 text-red-500 py-2 rounded-xl">
+      Clear Data
+    </button>
+
+  </div>
+
+  <!-- CHART PAGE -->
+  <div v-if="page==='charts'">
+
+    <button @click="page='log'"
+      class="mb-3 text-xs px-3 py-1 border rounded-full">
+      Back
+    </button>
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+
+      <div class="p-4 border rounded-xl">
+        <div class="text-xs text-gray-500">Total Pee</div>
+        <div class="text-2xl font-bold">{{ count('pee') }}</div>
+      </div>
+
+      <div class="p-4 border rounded-xl">
+        <div class="text-xs text-gray-500">Total Poo</div>
+        <div class="text-2xl font-bold">{{ count('poo') }}</div>
+      </div>
+
+    </div>
+
+    <div class="p-4 border rounded-xl">
+      <div class="text-sm font-semibold mb-2">Last 7 Days</div>
+
+      <div class="space-y-2">
+        <div v-for="d in last7Days" :key="d.date"
+             class="flex justify-between text-xs border-b py-1">
+          <div>{{ d.label }}</div>
+          <div class="flex gap-3">
+            <span>💧 {{ d.pee }}</span>
+            <span>💩 {{ d.poo }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const { createApp } = Vue;
+
+createApp({
+  data() {
+    return {
+      page: 'log',
+      logs: JSON.parse(localStorage.getItem('baby_logs') || '[]')
+    };
+  },
+
+  computed: {
+    last7Days() {
+      const days = [];
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = d.toDateString();
+
+        const filtered = this.logs.filter(l =>
+          new Date(l.time).toDateString() === key
+        );
+
+        days.push({
+          date: key,
+          label: d.toLocaleDateString('en', { weekday: 'short' }),
+          pee: filtered.filter(x => x.type === 'pee').length,
+          poo: filtered.filter(x => x.type === 'poo').length
+        });
+      }
+      return days;
+    }
+  },
+
+  methods: {
+    add(type) {
+      this.logs.push({
+        type,
+        time: new Date().toISOString()
+      });
+      this.save();
+    },
+
+    save() {
+      localStorage.setItem('baby_logs', JSON.stringify(this.logs));
+    },
+
+    clearData() {
+      this.logs = [];
+      this.save();
+    },
+
+    count(type) {
+      return this.logs.filter(l => l.type === type).length;
+    },
+
+    format(t) {
+      const d = new Date(t);
+      return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+  }
+}).mount('#app');
+</script>
+
+</body>
+</html>
