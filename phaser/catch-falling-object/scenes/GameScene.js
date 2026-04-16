@@ -25,6 +25,8 @@ export class GameScene extends Phaser.Scene {
         this.koObjects = ['ko1', 'ko2'];
         this.load.image('ko1', 'assets/sprites/ko/Subject 1.png');
         this.load.image('ko2', 'assets/sprites/ko/Subject 2.png');
+
+        this.load.image('sparkle', 'assets/sprites/white.png');
     }
 
     create() {
@@ -47,6 +49,19 @@ export class GameScene extends Phaser.Scene {
             this.time.timeScale = this.isPaused ? 0 : 1;
             this.pauseText.setVisible(this.isPaused);
         });
+
+        // Sparkle emitter
+        this.sparkleEmitter = this.add.particles(0, 0, 'sparkle', {
+            speed: { min: 60, max: 140 },
+            scale: { start: 0.25, end: 0 },
+            alpha: { start: 1, end: 0 },
+            tint: [0xffffff, 0xffe066, 0xffaaff, 0x88eeff],
+            blendMode: 'ADD',
+            lifespan: 500,
+            quantity: 10,
+            angle: { min: 0, max: 360 },
+            emitting: false
+        }).setDepth(5);
 
         // Groups
         this.okGroup = this.physics.add.group();
@@ -150,9 +165,14 @@ export class GameScene extends Phaser.Scene {
 
     catchOk(player, obj) {
         if (this.isGameOver) return;
+        const x = obj.x;
+        const y = obj.y;
         obj.destroy();
         this.score += 10;
         this.updateScore();
+
+        // Burst sparkles at catch position
+        this.sparkleEmitter.explode(18, x, y);
     }
 
     catchKo(player, obj) {
