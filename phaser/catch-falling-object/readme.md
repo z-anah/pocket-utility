@@ -175,6 +175,67 @@ The Catching Tool: Instead of a simple basket, he could hold a Kotak Wayang (the
 
 # PROMPT
 
+```
+
 For test purposes inside catch-falling-object/
 Create a hello world using Phaser using https://www.dafont.com/ari-w9500.font
 test/index.html: an example Phaser project, get inspired of it
+
+```
+
+```md
+
+# Plan
+
+1: Add the short story + dialogue into IntroScene (IntroScene.js:1).
+2: Show names and a concise visual description of the elder for use in art/text.
+3: Button catch object (reformulate to immerse the game) and go to game scene.
+
+# Story
+
+## Premise: 
+
+Di sebuah kampung kecil, wayang kulit mulai dilupakan. Bayu, dalang muda yang penasaran, menemukan kotak pewarisan keluarga. Ki Mangun, tetua dalang, memanggilnya dan memberi tugas suci: menjaga cerita, suara, dan nyawa wayang agar warisan tetap hidup.
+
+## Dialog (dengan emosi + gerakan)
+
+Ki Mangun: "Bayu, dengar baik-baik. Wayang bukan sekadar kulit dan bambu." [/assets/sprites/ki/Subject.png]
+Bayu: "Ki, aku hanya anak desa. Kenapa aku?" [/assets/sprites/bayu/Subject.png]
+Ki Mangun: "Karena suara dan cerita akan memilih yang berani memikulnya. Kau dipanggil bukan oleh darah, tapi oleh hati." [/assets/sprites/ki/Subject 2.png]
+Bayu: "Apa yang harus kulakukan, Ki?" [/assets/sprites/bayu/Subject 2.png]
+Ki Mangun: "Pelajari tiap lakon, jaga ritme gamelan dalam suaramu, dan hidupkan tokoh-tokoh itu kembali. Jadikan mereka suara nenek moyang kita." [/assets/sprites/ki/Subject 3.png]
+Bayu: "Aku akan berusaha, Ki." [/assets/sprites/bayu/Subject 3.png]
+Ki Mangun: "Ingat — ketika wayang bercerita, raga kita mendengar sejarah. Jagalah." [/assets/sprites/ki/Subject 4.png]
+
+# Visual Description of Characters
+
+## Character location
+
+Center of the screen, slightly above the midpoint
+Foreground layer, clearly in focus
+
+## Dialogue location
+
+Bottom-center of the screen
+Inside a wide rectangular dialogue box
+
+## Dialogue button location
+
+Bottom-right corner of the dialogue box
+Circular green button with a right-pointing arrow
+
+## Background
+
+Blurred (depth-of-field effect)
+Appears to be an indoor scene, possibly a shop or festive environment
+Warm colors (reds, pinks, soft lighting)
+Contains indistinct shapes suggesting objects or decorations
+
+## Emitter / visual effect
+
+Sparkle particle effect around the character
+Small glowing star-like particles scattered around her head and shoulders
+Likely a celebratory or reward-type visual emitter indicating emphasis or charm
+
+```
+
