@@ -52,7 +52,7 @@ export class GameScene extends Phaser.Scene {
 
         // Sparkle emitter
         this.sparkleEmitter = this.add.particles(0, 0, 'sparkle', {
-            speed: { min: 60, max: 140 },
+            speed: { min: 140, max: 200 },
             scale: { start: 0.25, end: 0 },
             alpha: { start: 1, end: 0 },
             tint: [0xffffff, 0xffe066, 0xffaaff, 0x88eeff],

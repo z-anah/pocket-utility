@@ -14,49 +14,49 @@ const DIALOGUES = [
     {
         speaker: 'Ki Mangun',
         emotion: 'serius',
-        text: '"Bayu, dengar baik-baik. Wayang bukan sekadar kulit dan bambu."',
+        text: 'Bayu, dengar baik-baik. Wayang bukan sekadar kulit dan bambu.',
         sprite: 'ki1',
         tween: 'raise'          // angkat tangan — bob naik sekali
     },
     {
         speaker: 'Bayu',
         emotion: 'bingung',
-        text: '"Ki, aku hanya anak desa. Kenapa aku?"',
+        text: 'Ki, aku hanya anak desa. Kenapa aku?',
         sprite: 'bayu1',
         tween: 'stepback'       // langkah mundur — geser kanan lalu kembali
     },
     {
         speaker: 'Ki Mangun',
         emotion: 'lembut',
-        text: '"Karena suara dan cerita akan memilih yang berani\nmemikulnya. Kau dipanggil bukan oleh darah, tapi oleh hati."',
+        text: 'Karena suara dan cerita akan memilih yang berani memikulnya.\nKau dipanggil bukan oleh darah, tapi oleh hati.',
         sprite: 'ki2',
         tween: 'lean'           // tepuk bahu — condong maju sedikit
     },
     {
         speaker: 'Bayu',
         emotion: 'cemas',
-        text: '"Apa yang harus kulakukan, Ki?"',
+        text: 'Apa yang harus kulakukan, Ki?',
         sprite: 'bayu2',
         tween: 'bow'            // menunduk — turun sedikit
     },
     {
         speaker: 'Ki Mangun',
         emotion: 'berwibawa',
-        text: '"Pelajari tiap lakon, \ndan hidupkan tokoh-tokoh itu kembali.\nJadikan mereka suara nenek moyang kita."',
+        text: 'Pelajari tiap lakon, dan hidupkan tokoh-tokoh itu kembali.\nJadikan mereka suara nenek moyang kita.',
         sprite: 'ki3',
         tween: 'gesture'        // isyarat luas — ayun kiri-kanan
     },
     {
         speaker: 'Bayu',
         emotion: 'tekad',
-        text: '"Aku akan berusaha, Ki."',
+        text: 'Aku akan berusaha, Ki.',
         sprite: 'bayu3',
         tween: 'pulse'          // kepal ke dada — denyut ganda
     },
     {
         speaker: 'Ki Mangun',
         emotion: 'peringatan',
-        text: '"Ingat — ketika wayang bercerita, raga kita\nmendengar sejarah. Jagalah."',
+        text: 'Ingat... Ketika wayang bercerita, raga kita\nmendengar sejarah. Jagalah.',
         sprite: 'ki4',
         tween: 'drift'          // serahkan kotak — meluncur maju perlahan
     }
@@ -101,7 +101,7 @@ export class IntroScene extends Phaser.Scene {
 
         // -- Character sprite --
         const charX = W / 2;
-        const charY = H - 180;   // bottom of character, 195 px above screen base
+        const charY = H - 185;   // bottom of character, 195 px above screen base
         this.charImage = this.add.image(charX, charY, 'ki1')
             .setOrigin(0.5, 1)
             .setScale(0.2)
@@ -131,7 +131,7 @@ export class IntroScene extends Phaser.Scene {
         const boxPad = 28;
 
         const dialogBox = this.add.graphics();
-        dialogBox.fillStyle(0x0d0620, 0.88);
+        dialogBox.fillStyle(0x0d0620, 0.8);
         dialogBox.lineStyle(2, 0xf8d77c, 0.8);
         dialogBox.fillRoundedRect(boxX, boxY, boxW, boxH, 14);
         dialogBox.strokeRoundedRect(boxX, boxY, boxW, boxH, 14);
