@@ -3,7 +3,7 @@ import { Player } from '../objects/Player.js';
 
 export class GameScene extends Phaser.Scene {
     constructor() {
-        super();
+        super({ key: 'GameScene' });
         this.score = 0;
         this.lives = 3;
         this.isGameOver = false;
